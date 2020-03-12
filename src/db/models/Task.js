@@ -12,4 +12,4 @@ const taskSchema = new mongoose.Schema({
   }
 });
 
-mongoose.model("Task", taskSchema);
+mongoose.model("Task", taskSchema).init();

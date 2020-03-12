@@ -2,14 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const router = express.Router();
-
+const messages = require("../config/errors");
 router.use(express.json());
 
 router.post("/users", async (req, res) => {
   const { name, email, password } = req.body;
 
   if ((!name, !email, !password)) {
-    return res.status(503).send({ error: "You must provide all the inputs" });
+    return res.status(503).send({ error: messages["incomplete"] });
   }
   try {
     const user = new User({
@@ -18,10 +18,10 @@ router.post("/users", async (req, res) => {
       password
     });
     await user.save();
-    res.send(user);
+    res.status(201).send(user);
   } catch (e) {
     if (e.message.includes("duplicate")) {
-      return res.status(503).send({ error: "Unable to register user!" });
+      return res.status(503).send({ error: messages["not_registered"] });
     }
     res.status(503).send({ error: e.message });
   }
