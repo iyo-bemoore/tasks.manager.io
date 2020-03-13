@@ -24,4 +24,14 @@ router.post("/task", async (req, res) => {
     res.status(502).send({ error: e.message });
   }
 });
+
+router.get("/tasks", async (req, res) => {
+  try {
+    let tasks = await Task.find({});
+
+    res.status(201).send(tasks);
+  } catch (e) {
+    res.status(404).send({ error: e.message });
+  }
+});
 module.exports = router;

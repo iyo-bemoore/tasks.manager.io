@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./src/index.js",
-    "dev": "nodemon ./src/index.js -w"
+    "dev": "nodemon ./src/index.js  -e js,html"
   },
   "author": "Imad Youssoufi",
   "license": "MIT",
   "dependencies": {
     "dotenv": "^8.2.0",
+    "ejs": "^3.0.1",
     "express": "^4.17.1",
+    "hbs": "^4.1.0",
     "mongoose": "^5.9.4",
     "validator": "^12.2.0"
   }

@@ -27,4 +27,25 @@ router.post("/users", async (req, res) => {
   }
 });
 
+router.get("/users", async (req, res) => {
+  try {
+    let users = await User.find({});
+
+    res.status(200).send(users);
+  } catch (e) {
+    return res.status(502).send({ error: e.message });
+  }
+});
+
+router.get("/users/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    let user = await User.findById(id);
+    res.status(200).send(user);
+  } catch (error) {
+    return res.status(502).render("404");
+  }
+});
+
 module.exports = router;
