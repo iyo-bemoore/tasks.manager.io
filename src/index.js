@@ -2,7 +2,7 @@ require("./db/models/User");
 require("./db/models/Task");
 require("./db/mongoose");
 const path = require("path");
-const errorHandler = require("./middlewares/auth_middlewares");
+const { errorHandler } = require("./middlewares/auth_middlewares");
 const express = require("express");
 
 const app = express();
