@@ -1,6 +1,7 @@
 require("./db/models/User");
 require("./db/models/Task");
 require("./db/mongoose");
+const { auth } = require("./middlewares/auth_middlewares");
 const path = require("path");
 const { errorHandler } = require("./middlewares/auth_middlewares");
 const express = require("express");
@@ -21,7 +22,7 @@ app.use(taskRoutes);
 app.use(express.json());
 app.use(errorHandler);
 
-app.get("/", (req, res) => {
+app.get("/", auth, (req, res) => {
   res.send("Connected");
 });
 

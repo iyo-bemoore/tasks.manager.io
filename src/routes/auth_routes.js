@@ -80,10 +80,14 @@ router.post("/users/logoutAll", auth, async (req, res) => {
 
 router.get("/users/me", auth, async (req, res) => {
   const { user } = req;
+  if (!user) {
+    return res.status(402).send({ error: messages["user_not_found"] });
+  }
   res.status(200).send(user);
 });
-router.get("/users/:id", async (req, res) => {
-  const { id } = req.params;
+
+router.get("/users/me", async (req, res) => {
+  const { id } = req.user._id;
 
   try {
     let user = await User.findById(id);
@@ -92,34 +96,27 @@ router.get("/users/:id", async (req, res) => {
     return res.status(502).render("404");
   }
 });
-router.patch("/users/:id", async (req, res) => {
+
+router.patch("/users/me", auth, async (req, res) => {
   const updates = Object.keys(req.body);
-  const { id } = req.params;
 
   if (!validateBodyParams(User.schema, req.body)) {
     return res.status(502).send({ error: messages["cannont_update"] });
   }
 
   try {
-    let user = await User.findById(id);
-    updates.forEach(update => (user[update] = req.body[update]));
-    await user.save();
-    if (!user) {
-      return res.status(404).send({ error: messages["cannont_update"] });
-    }
-    res.status(200).send(user);
+    updates.forEach(update => (req.user[update] = req.body[update]));
+    await req.user.save();
+
+    res.status(200).send(req.user);
   } catch (e) {
     res.status(503).send({ error: messages["cannont_update"] });
   }
 });
 
-router.delete("/users/:id", async (req, res) => {
-  const { id } = req.params;
+router.delete("/users/me", auth, async (req, res) => {
   try {
-    let user = await User.findByIdAndDelete(id);
-    if (!user) {
-      return res.status(404).send({ error: messages["cannont_update"] });
-    }
+    await req.user.remove();
     res.status(201).send({ succes: messages["user_removed"] });
   } catch (error) {
     res.status(503).send({ error: messages["cannont_update"] });

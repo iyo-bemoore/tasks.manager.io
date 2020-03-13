@@ -3,43 +3,54 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const UserSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  email: {
-    type: String,
-    required: true,
-    lowercase: true,
-    trim: true,
-    unique: true,
-    validate(value) {
-      if (!validator.isEmail(value)) {
-        throw new Error("You must provide a valid email address");
+const UserSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
+      unique: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("You must provide a valid email address");
+        }
       }
-    }
-  },
-  password: {
-    required: true,
-    type: String,
-    minlength: 6,
-    trim: true,
-    validate(value) {
-      if (value.toLowerCase().includes("password")) {
-        throw new Error("Password must not include the word password!");
+    },
+    password: {
+      required: true,
+      type: String,
+      minlength: 6,
+      trim: true,
+      validate(value) {
+        if (value.toLowerCase().includes("password")) {
+          throw new Error("Password must not include the word password!");
+        }
       }
-    }
-  },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true
+        }
       }
-    }
-  ]
+    ]
+  },
+  {
+    timestamps: true
+  }
+);
+
+UserSchema.virtual("tasks", {
+  ref: "Task",
+  localField: "_id",
+  foreignField: "owner"
 });
 
 UserSchema.pre("save", function(next) {
@@ -60,6 +71,13 @@ UserSchema.pre("save", function(next) {
     });
   });
 });
+
+UserSchema.methods.toJSON = function() {
+  const user = this;
+  const userObject = user.toObject();
+  const { password, tokens, ...newUserObject } = userObject;
+  return newUserObject;
+};
 UserSchema.methods.comparePassword = async function(candidatePassword) {
   const user = this;
   const isMatch = await bcrypt.compare(candidatePassword, user.password);
