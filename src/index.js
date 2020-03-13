@@ -11,8 +11,10 @@ const autRoutes = require("./routes/auth_routes");
 const taskRoutes = require("./routes/task_routes");
 const publicDirectoryPath = path.join(__dirname, "./public");
 require("dotenv").config();
+
 app.engine("html", require("ejs").renderFile);
 app.set("view engine", "html");
+
 app.use(express.static(publicDirectoryPath));
 app.use(autRoutes);
 app.use(taskRoutes);

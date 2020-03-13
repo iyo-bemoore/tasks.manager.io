@@ -6,7 +6,8 @@ const mongoClientURI = `${process.env.MONGO_DB_HD}${process.env.MONGO_DB_USR}:${
 mongoose.connect(mongoClientURI, {
   useCreateIndex: true,
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useFindAndModify: false
 });
 mongoose.connection.on("error", error => {
   console.log("custom ", error.message);
