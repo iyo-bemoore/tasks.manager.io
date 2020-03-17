@@ -1,12 +1,20 @@
 const express = require("express");
+const multer = require("multer");
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const router = express.Router();
 require("../db/models/User");
+
 const messages = require("../config/errors");
 const validateBodyParams = require("../config/helpers");
+
 router.use(express.json());
 const { auth } = require("../middlewares/auth_middlewares");
+
+const upload = multer({
+  dest: "avatars"
+});
+
 // signup
 router.post("/users", async (req, res) => {
   const { name, email, password } = req.body;
@@ -121,6 +129,10 @@ router.delete("/users/me", auth, async (req, res) => {
   } catch (error) {
     res.status(503).send({ error: messages["cannont_update"] });
   }
+});
+
+router.post("/users/me/avatar", upload.single("avatar"), (req, res) => {
+  res.send();
 });
 
 module.exports = router;
