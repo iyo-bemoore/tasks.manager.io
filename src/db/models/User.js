@@ -33,6 +33,9 @@ const UserSchema = new mongoose.Schema(
         }
       }
     },
+    avatar: {
+      type: Buffer
+    },
     tokens: [
       {
         token: {
@@ -75,7 +78,7 @@ UserSchema.pre("save", function(next) {
 UserSchema.methods.toJSON = function() {
   const user = this;
   const userObject = user.toObject();
-  const { password, tokens, ...newUserObject } = userObject;
+  const { password, tokens, avatar, ...newUserObject } = userObject;
   return newUserObject;
 };
 UserSchema.methods.comparePassword = async function(candidatePassword) {
