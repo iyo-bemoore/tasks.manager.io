@@ -22,7 +22,7 @@ app.use(taskRoutes);
 app.use(express.json());
 app.use(errorHandler);
 
-app.get("/", auth, (req, res) => {
+app.get("/", (req, res) => {
   res.send("Connected");
 });
 
