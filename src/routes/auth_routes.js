@@ -4,17 +4,17 @@ const sharp = require("sharp");
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const router = express.Router();
+require("../db/models/User");
+const validateBodyParams = require("../config/helpers");
+const { auth } = require("../middlewares/auth_middlewares");
+const messages = require("../config/errors");
+
 const {
   sendWelcomeMessage,
   sendSubscriptionCancelationMessage
 } = require("../emails/account");
-require("../db/models/User");
-
-const messages = require("../config/errors");
-const validateBodyParams = require("../config/helpers");
 
 router.use(express.json());
-const { auth } = require("../middlewares/auth_middlewares");
 
 const upload = multer({
   limits: {
@@ -103,20 +103,9 @@ router.post("/users/logoutAll", auth, async (req, res) => {
 router.get("/users/me", auth, async (req, res) => {
   const { user } = req;
   if (!user) {
-    return res.status(402).send({ error: messages["user_not_found"] });
+    return res.status(404).send({ error: messages["user_not_found"] });
   }
   res.status(200).send(user);
-});
-
-router.get("/users/me", async (req, res) => {
-  const { id } = req.user._id;
-
-  try {
-    let user = await User.findById(id);
-    res.status(200).send(user);
-  } catch (error) {
-    return res.status(502).render("404");
-  }
 });
 
 router.patch("/users/me", auth, async (req, res) => {

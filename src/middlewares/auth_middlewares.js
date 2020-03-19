@@ -18,8 +18,9 @@ const auth = (req, res, next) => {
     if (error) {
       return res.status(401).send({ error: "You must be logged in !" });
     }
-    const { useId } = payload;
-    const user = await User.findById(useId);
+    const { _id } = payload;
+    const user = await User.findById(_id);
+
     req.user = user;
     req.token = token;
     next();

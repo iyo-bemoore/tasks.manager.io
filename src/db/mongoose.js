@@ -5,9 +5,9 @@ require("dotenv").config();
 const mongoClientURI = `${process.env.MONGO_DB_HD}${process.env.MONGO_DB_USR}:${
   process.env.MONGO_DB_PSWD
 }${
-  process.env.NODE_ENV === "development"
-    ? process.env.MONGO_DB_BASE
-    : process.env.MONGO_DB_BASE_PRD
+  process.env.NODE_ENV === "test"
+    ? process.env.MONGO_DB_BASE_TEST
+    : process.env.MONGO_DB_BASE
 }`;
 mongoose.connect(mongoClientURI, {
   useCreateIndex: true,
