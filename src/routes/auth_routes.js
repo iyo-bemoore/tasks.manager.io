@@ -108,6 +108,7 @@ router.get("/users/me", auth, async (req, res) => {
   res.status(200).send(user);
 });
 
+
 router.patch("/users/me", auth, async (req, res) => {
   const updates = Object.keys(req.body);
 
@@ -167,7 +168,7 @@ router.get("/users/:id/avatar", async (req, res) => {
       throw new Error("No User or no image defined");
     }
     res.set("Content-type", "image/png");
-    res.send(user.avatar);
+    res.send(user.avatar);  
   } catch (error) {
     res.status(404).send;
   }

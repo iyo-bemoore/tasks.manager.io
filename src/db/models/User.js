@@ -81,6 +81,7 @@ UserSchema.methods.toJSON = function() {
   const { password, tokens, avatar, ...newUserObject } = userObject;
   return newUserObject;
 };
+
 UserSchema.methods.comparePassword = async function(candidatePassword) {
   const user = this;
   const isMatch = await bcrypt.compare(candidatePassword, user.password);
